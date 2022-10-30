@@ -1,0 +1,134 @@
+﻿@model PagedList.IPagedList<u17004111_HW06.Models.product>
+@using PagedList.Mvc
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Products";
+}
+
+<h2>Products</h2>
+
+<form class="d-flex" role="search">
+    @Html.TextBox("namesearch", ViewBag.CurrentFilterTextbox as string)
+    <button class="btn btn-outline-success" type="submit">Search</button>
+    <a class="btn btn-outline-primary" onclick="Create()">Create</a>
+</form>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Product Name")
+        </th>
+        <th>
+            @Html.DisplayName("Model Year")
+        </th>
+        <th>
+            @Html.DisplayName("List Price")
+        </th>
+        <th>
+            @Html.DisplayName("Brand Name")
+        </th>
+        <th>
+            @Html.DisplayName("Category")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.product_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.model_year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.list_price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.brand.brand_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.category.category_name)
+            </td>
+            <td>
+                <a class="btn btn-outline-secondary" id="@item.product_id" onclick="Edit(this.id)">Edit</a>
+                <a class="btn btn-outline-info" id="@item.product_id" onclick="Details(this.id)">Details</a>
+                <a class="btn btn-outline-danger" id="@item.product_id" onclick="Delete(this.id)">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+@using (Html.BeginForm("Index", "Activity", FormMethod.Get))
+{
+    <table class="table-condensed" width="100%" align="center">
+        <thead>
+            <tr>
+                <td>
+                    <p>
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilterTextbox = ViewBag.CurrentFilterTextbox }))
+                    </p>
+                </td>
+            </tr>
+        </thead>
+    </table>
+}
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Details</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        function Details(id) {
+            $.get("@Url.Action("Details","products")/" + id,
+                function (data) {
+                    $('.modal-body').html(data);
+                });
+
+                $("#myModal").modal("show");
+        }
+
+        function Edit(id) {
+            $.get("@Url.Action("Edit","products")/" + id,
+                function (data) {
+                    $('.modal-body').html(data);
+                });
+
+                $("#myModal").modal("show");
+        }
+
+        function Delete(id) {
+            $.get("@Url.Action("Delete","products")/" + id,
+                function (data) {
+                    $('.modal-body').html(data);
+                });
+
+                $("#myModal").modal("show");
+        }
+
+        function Create() {
+            $.get("@Url.Action("Create","products")/",
+                function (data) {
+                    $('.modal-body').html(data);
+                });
+
+                $("#myModal").modal("show");
+        }
+    </script>
+}

@@ -1,0 +1,86 @@
+﻿@model PagedList.IPagedList<u17004111_HW06.Models.order>
+@using PagedList.Mvc
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h2>Orders</h2>
+<!-- This needs to be a datetime picker -->
+<form class="d-flex" role="search">
+        <input type="date" value="@ViewBag.CurrentFilterTextbox" name="datesearch" class="input-group-text" />
+        @*@Html.TextBox("namesearch", ViewBag.CurrentFilterTextbox as string)*@
+        <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+<br />
+
+@foreach (var item in Model)
+{
+    decimal orderTotal = 0;
+    var currentDate = item.order_date.Date.ToShortDateString();
+
+<h3>Order @Html.DisplayFor(modelItem => item.order_id) - @Html.DisplayName(currentDate)</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    List Price
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Total
+                </th>
+            </tr>
+        </thead>
+        @foreach (var orderLine in item.order_items)
+        {
+            var lineTotal = orderLine.quantity * orderLine.list_price;
+            orderTotal += lineTotal;
+            <tr>
+                <td>
+                    @Html.DisplayFor(orderSum => orderLine.product.product_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(orderSum => orderLine.product.list_price)
+                </td>
+                <td>
+                    @Html.DisplayFor(orderSum => orderLine.quantity)
+                </td>
+                <td>
+                    @lineTotal
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+            <th>
+                Grand Total
+            </th>
+            <td>
+                @orderTotal
+            </td>
+        </tr>
+    </table>
+    <br />
+}
+
+@using (Html.BeginForm("Index", "Activity", FormMethod.Get))
+{
+    <table class="table-condensed" width="100%" align="center">
+        <thead>
+            <tr>
+                <td>
+                    <p>
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilterTextbox = ViewBag.CurrentFilterTextbox }))
+                    </p>
+                </td>
+            </tr>
+        </thead>
+    </table>
+}

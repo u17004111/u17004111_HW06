@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Report";
+}
+
+<canvas id="barChart" height="125"></canvas>
+
+<script>
+    var c = document.getElementById("barChart");
+    var ctx = c.getContext("2d");
+    var tData = $.getValues("/Home/ChartData");
+    var myBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: tData
+    });
+</script>

@@ -1,0 +1,82 @@
+﻿@model u17004111_HW06.Models.product
+
+<table cellpadding="0" cellspacing="0" border="0">
+    <thead>
+        <tr>
+            <th>@Html.DisplayFor(model => model.product_name)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                Name
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.product_name)
+            </td>
+        <tr>
+            <td>
+                Year
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.model_year)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Price
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.list_price)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Brand
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.brand.brand_name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Category
+            </td>
+            <td>
+                @Html.DisplayTextFor(model => model.category.category_name)
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table cellpadding="0" cellspacing="0" border="0">
+    <thead>
+        <tr>
+            <th>Store</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stockItem in Model.stocks)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => stockItem.store.store_name)
+                </td>
+                @if (DBNull.Value.Equals(stockItem.quantity) || stockItem.quantity == 0)
+                {
+                    <td>
+                        Out of Stock
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => stockItem.quantity)
+                    </td>
+                }
+            </tr>
+        }
+
+    </tbody>
+</table>
